@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Mersad Berber Art</h1>
+    <p class="lead">In the Game Store, you can find only the best games on the market as soon as they're published, all under fair price. </p>
+    <p>@Html.ActionLink("Contact us »", "Contact", null, htmlAttributes: new {@class = "btn btn-primary btn-large" })</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Paintings</h2>
+        <p>
+            Browse our collection of action first person shooter games! FPS games are fast,
+            action-rich games with constant action from which you will never get tired of.
+            Includes both singleplayer and multiplayer modes.
+        </p>
+        <img src="~/images/arts/test-art-1.jpg" style="width: 100%; height: 50%" /><br /><br />
+        <p>@Html.ActionLink("Action games »", "Index", "Shop", new { gameGenre = "Action" }, htmlAttributes: new { @class = "btn btn-default" })</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Prints</h2>
+        <p>
+            Only for biggest RPG fans out there! Widest collection of RPG games that will
+            satisfy anyone's need for Hack&Slash or Tactics-based action with deep stories behind
+            the beautiful graphics.
+        </p>
+        <img src="~/images/arts/test-art-2.jpg" style="width: 100%; height: 50%" /><br /><br />
+        <p>@Html.ActionLink("RPG games »", "Index", "Shop", new { gameGenre = "Action RPG" }, htmlAttributes: new {@class = "btn btn-default" })</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Gold Plating</h2>
+        <p>
+            Only for biggest RPG fans out there! Widest collection of RPG games that will
+            satisfy anyone's need for Hack&Slash or Tactics-based action with deep stories behind
+            the beautiful graphics.
+        </p>
+        <img src="~/images/arts/test-art-3.jpg" style="width: 100%; height: 50%" /><br /><br />
+        <p>@Html.ActionLink("RPG games »", "Index", "Shop", new { gameGenre = "Action RPG" }, htmlAttributes: new {@class = "btn btn-default" })</p>
+    </div>
+</div>
