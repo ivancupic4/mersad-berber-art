@@ -1,6 +1,6 @@
-    DROP TABLE IF EXISTS dbo.Countries;
+    DROP TABLE IF EXISTS dbo.Country;
 	
-    CREATE TABLE Countries (
+    CREATE TABLE Country (
         Id int primary key identity,
         alpha_2 char(2) NOT NULL DEFAULT '',
         alpha_3 char(3) NOT NULL DEFAULT '',
@@ -40,9 +40,9 @@
 		zhtw varchar(500) NOT NULL DEFAULT '',
 		)
 
-	SET IDENTITY_INSERT dbo.Countries ON;
+	SET IDENTITY_INSERT dbo.Country ON;
 
-    INSERT INTO Countries
+    INSERT INTO Country
 		(id, alpha_2, alpha_3, ar, bg, cs, da, de, el, en, eo, es, et, eu, fi, fr, hr, hu, hy, it, ja, ko, lt, nl, [no], pl, pt, ro, ru, sk, sl, sr, sv, th, uk, zh, zhtw) VALUES
 (4,'af','afg','أفغانستان','Афганистан','Afghánistán','Afghanistan','Afghanistan','Αφγανιστάν','Afghanistan','Afganio','Afganistán','Afganistan','Afganistan','Afganistan','Afghanistan','Afganistan','Afganisztán','Աֆղանստան','Afghanistan','アフガニスタン','아프가니스탄','Afganistanas','Afghanistan','Afghanistan','Afganistan','Afeganistão','Afganistan','Афганистан','Afganistan','Afganistan','Avganistan','Afghanistan','อัฟกานิสถาน','Афганістан','阿富汗','阿富汗'),
 (248,'ax','ala','جزر أولاند','Оландски острови','Alandy','Ålandsøerne','Åland','Ώλαντ','Åland Islands','Alando','Åland','Ahvenamaa','Aland','Ahvenanmaa','Îles Åland','Ålandski otoci','Åland','Ալանդյան կղզիներ','Isole Åland','オーランド諸島','올란드 제도','Alandų salos','Åland','Åland','Wyspy Alandzkie','Ilhas Åland','Insulele Åland','Аландские острова','Alandy','Ålandski otoki','Olandska Ostrva','Åland','หมู่เกาะโอลันด์','Аландські острови','奥兰','奧蘭'),
@@ -294,4 +294,4 @@
 (894,'zm','zmb','زامبيا','Замбия','Zambie','Zambia','Sambia','Ζάμπια','Zambia','Zambio','Zambia','Sambia','Zambia','Sambia','Zambie','Zambija','Zambia','Զամբիա','Zambia','ザンビア','잠비아','Zambija','Zambia','Zambia','Zambia','Zâmbia','Zambia','Замбия','Zambia','Zambija','Zambija','Zambia','แซมเบีย','Замбія','赞比亚','尚比亞'),
 (716,'zw','zwe','زيمبابوي','Зимбабве','Zimbabwe','Zimbabwe','Simbabwe','Ζιμπάμπουε','Zimbabwe','Zimbabvo','Zimbabue','Zimbabwe','Zimbabwe','Zimbabwe','Zimbabwe','Zimbabve','Zimbabwe','Զիմբաբվե','Zimbabwe','ジンバブエ','짐바브웨','Zimbabvė','Zimbabwe','Zimbabwe','Zimbabwe','Zimbábue','Zimbabwe','Зимбабве','Zimbabwe','Zimbabve','Zimbabve','Zimbabwe','ซิมบับเว','Зімбабве','津巴布韦','辛巴威')
 
-SET IDENTITY_INSERT dbo.Countries OFF;
+SET IDENTITY_INSERT dbo.Country OFF;

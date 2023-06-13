@@ -33,6 +33,7 @@ BEGIN
 		[Description] VARCHAR(1024),
 		[DateCreated] DATE,
 		[Price] DECIMAL(10, 2) NOT NULL,
+		[ImageUrl] VARCHAR(200),
 
 		FOREIGN KEY ([ArtTypeId]) REFERENCES [ArtType] ([Id])
 	);
@@ -52,8 +53,8 @@ BEGIN
 		[City] VARCHAR(200),
 		[Address] VARCHAR(200),
 		[PostalCode] VARCHAR(200),
-
-
+		
+		FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id]),
 	);
 END
 
