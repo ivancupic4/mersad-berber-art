@@ -62,6 +62,9 @@ namespace MersadBerberArt.Controllers
         // GET: Art/Create
         public IActionResult Create()
         {
+            var artTypes = _context.ArtType.Select(a => a.Name).Distinct().ToList();
+            ViewBag.ArtTypes = new SelectList(artTypes);
+
             return View();
         }
 

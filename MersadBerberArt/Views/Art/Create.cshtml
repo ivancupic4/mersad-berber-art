@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ArtType" class="control-label"></label>
-                <select asp-for="ArtType" class="form-control"></select>
+                @Html.DropDownList("ArtType", (IEnumerable<SelectListItem>)ViewBag.ArtTypes,"", new { @class = "form-control input-sm" })
                 <span asp-validation-for="ArtType" class="text-danger"></span>
             </div>
             <div class="form-group">
