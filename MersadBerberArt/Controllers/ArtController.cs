@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MersadBerberArt.Data;
 using MersadBerberArt.Models;
+using System.Security.AccessControl;
 
 namespace MersadBerberArt.Controllers
 {
@@ -20,10 +21,28 @@ namespace MersadBerberArt.Controllers
         }
 
         // GET: Art
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, ArtTypeEnum? artType = null)
         {
-            return _context.Art != null 
-                ? View(await _context.Art.ToListAsync()) 
+            var artTypes = _context.ArtType.Select(a => a.Name).Distinct().ToList();
+            ViewBag.ArtTypes = new SelectList(artTypes);
+
+            var result = await _context.Art
+            .Where(a => (!artType.HasValue || a.ArtType.Id == (int)artType.Value)
+                         && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
+                .Select(a => new ArtViewModel
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    ArtTypeName = a.ArtType.Name,
+                    DateCreated = a.DateCreated.ToShortDateString(),
+                    Description = a.Description,
+                    ImageUrl = a.ImageUrl,
+                    Price = $"{a.Price}€"
+                })
+                .ToListAsync();
+
+            return _context.Art != null
+                ? View(result)
                 : Problem("Entity set 'ApplicationDbContext.Art' is null.");
         }
 

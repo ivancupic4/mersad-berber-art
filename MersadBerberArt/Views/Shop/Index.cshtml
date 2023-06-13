@@ -6,38 +6,43 @@
 
 <h1>Browse Arts</h1>
 
-<div>
+<nav>
     @using (Html.BeginForm("Index", "Shop", FormMethod.Get))
     {
-        <div class="col-sm-3 d-inline-block">
-            Art Type: @Html.DropDownList("ArtType", (IEnumerable<SelectListItem>)ViewBag.ArtTypes,"", new { @class = "form-control input-sm" })
+        <div class="col-sm-2 d-inline-block">
+            <label class="form-label mt-4">Art Type: </label>
+            @Html.DropDownList("ArtType", (IEnumerable<SelectListItem>)ViewBag.ArtTypes,"", new { @class = "form-control input-sm" })
         </div>
-        <div class="col-sm-3 d-inline-block">
-            Title: @Html.TextBox("SearchString", null, new { @class = "form-control input-sm" })
+        <div class="col-sm-2 d-inline-block" style="margin-left: 10px">
+            <label class="form-label mt-4">Name: </label>
+            @Html.TextBox("SearchString", null, new { @class = "form-control input-sm" })
         </div>
-        <input type="submit" value="Search" class="btn btn-primary btn-sm" style="width:80px" />
+        <p></p>
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary">Search</button>
+            @Html.ActionLink("Clear", "Index", "Shop", null, new { @class = "btn btn-secondary btn-md" })
+        </div>
     }
-</div>
-
+</nav>
+<br />
 <table class="table">
     @foreach (var item in Model)
     {
-        <tr>
-            <td style="width:150px;">
-                <img src="~/images/arts/@item.ImageUrl" style="width:120px; height:160px" />
+        <tr class="row" style="padding: 20px 0px 20px 0px;">
+            <td class="col-md-4">
+                <img src="~/images/arts/@item.ImageUrl"  class="card-img" />
             </td>
-            <td style="width:280px;">
-                <b><p>@Html.DisplayFor(modelItem => item.Name)</p></b>
+            <td class="col-md-3" style="padding-left: 25px">
+                <p class="lead fw-bold">@Html.DisplayFor(modelItem => item.Name)</p>
                 <p>@Html.DisplayFor(modelItem => item.ArtTypeName) | @Html.DisplayFor(modelItem => item.DateCreated)</p>
-                <p>@Html.DisplayFor(modelItem => item.Price)</p>
+                <p class="text-success lead fw-bold"><strong>@Html.DisplayFor(modelItem => item.Price)</strong></p>
             </td>
-            <td style="width:400px;">
-                <div style="width:1px; height:10px"></div>
+            <td class="col-md-3">
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-            <td>
-                <div style="width:1px; height:10px"></div>
-                @Html.ActionLink("Add to cart", "Cart", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
+            <td class="col-md-2">
+                @Html.ActionLink("Add to cart", "Cart", new { id = item.Id }, new { @class = "btn btn-info btn-md" })
+                <div style="margin-top: 5px;">@Html.ActionLink("View Details", "Details", "Art", new { id = item.Id }, new { @class = "btn btn-secondary btn-md" })</div>
             </td>
         </tr>
     }

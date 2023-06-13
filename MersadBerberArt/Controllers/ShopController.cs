@@ -20,17 +20,14 @@ namespace MersadBerberArt.Controllers
         }
 
         // GET: Shop
-        public async Task<IActionResult> Index(ArtTypeEnum? artType = null)
+        public async Task<IActionResult> Index(string searchString, ArtTypeEnum? artType = null)
         {
-            var artTypes = _context.ArtType
-                .Distinct()
-                .Select(a => a.Name)
-                .ToList();
-
+            var artTypes = _context.ArtType.Select(a => a.Name).Distinct().ToList();
             ViewBag.ArtTypes = new SelectList(artTypes);
 
             var result = await _context.Art
-                .Where(a => !artType.HasValue || a.ArtType.Id == (int)artType.Value)
+                .Where(a => (!artType.HasValue || a.ArtType.Id == (int)artType.Value)
+                         && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
                 .Select(a => new ArtViewModel 
                 { 
                     Id = a.Id,
