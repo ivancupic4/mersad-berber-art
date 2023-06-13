@@ -1,0 +1,99 @@
+﻿@model IEnumerable<MersadBerberArt.Models.ArtViewModel>
+
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<h1>Browse Arts</h1>
+
+<div>
+    @using (Html.BeginForm("Index", "Shop", FormMethod.Get))
+    {
+        <div class="col-sm-3 d-inline-block">
+            Art Type: @Html.DropDownList("ArtType", (IEnumerable<SelectListItem>)ViewBag.ArtTypes,"", new { @class = "form-control input-sm" })
+        </div>
+        <div class="col-sm-3 d-inline-block">
+            Title: @Html.TextBox("SearchString", null, new { @class = "form-control input-sm" })
+        </div>
+        <input type="submit" value="Search" class="btn btn-primary btn-sm" style="width:80px" />
+    }
+</div>
+
+<table class="table">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="width:150px;">
+                <img src="~/images/arts/@item.ImageUrl" style="width:120px; height:160px" />
+            </td>
+            <td style="width:280px;">
+                <b><p>@Html.DisplayFor(modelItem => item.Name)</p></b>
+                <p>@Html.DisplayFor(modelItem => item.ArtTypeName) | @Html.DisplayFor(modelItem => item.DateCreated)</p>
+                <p>@Html.DisplayFor(modelItem => item.Price)</p>
+            </td>
+            <td style="width:400px;">
+                <div style="width:1px; height:10px"></div>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <div style="width:1px; height:10px"></div>
+                @Html.ActionLink("Add to cart", "Cart", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
+            </td>
+        </tr>
+    }
+</table>
+
+@*<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ArtTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArtTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@

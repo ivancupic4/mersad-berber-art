@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		SolutionItems\0001_CreateDb_CreateTables.sql = SolutionItems\0001_CreateDb_CreateTables.sql
 		SolutionItems\0002_CreateTable_Countries.sql = SolutionItems\0002_CreateTable_Countries.sql
+		SolutionItems\0003_Insert_Art_MockData.sql = SolutionItems\0003_Insert_Art_MockData.sql
 	EndProjectSection
 EndProject
 Global

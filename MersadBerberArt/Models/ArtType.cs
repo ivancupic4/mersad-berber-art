@@ -1,8 +1,8 @@
 ﻿namespace MersadBerberArt.Models
 {
-	public enum ArtType
-	{
-		Painting = 1,
-		Print = 2
-	}
+    public class ArtType
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

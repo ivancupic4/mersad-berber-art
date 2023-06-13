@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MersadBerberArt.Models;
 
 namespace MersadBerberArt.Data
 {
@@ -9,5 +10,7 @@ namespace MersadBerberArt.Data
             : base(options)
         {
         }
+        public DbSet<MersadBerberArt.Models.Art>? Art { get; set; }
+        public DbSet<MersadBerberArt.Models.ArtType>? ArtType { get; set; }
     }
 }
