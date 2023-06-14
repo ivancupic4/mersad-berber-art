@@ -28,7 +28,7 @@ namespace MersadBerberArt.Controllers
             var result = await _context.Art
                 .Where(a => (!artType.HasValue || a.ArtType.Id == (int)artType.Value)
                          && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
-                .Select(a => new ArtViewModel 
+                .Select(a => new ArtDisplayViewModel 
                 { 
                     Id = a.Id,
                     Name = a.Name,

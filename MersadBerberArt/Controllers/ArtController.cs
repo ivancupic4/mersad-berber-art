@@ -20,6 +20,9 @@ namespace MersadBerberArt.Controllers
             _context = context;
         }
 
+        [BindProperty]
+        public IFormFile ArtImageFile { get; set; }
+
         // GET: Art
         public async Task<IActionResult> Index(string searchString, ArtTypeEnum? artType = null)
         {
@@ -29,7 +32,7 @@ namespace MersadBerberArt.Controllers
             var result = await _context.Art
             .Where(a => (!artType.HasValue || a.ArtType.Id == (int)artType.Value)
                          && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
-                .Select(a => new ArtViewModel
+                .Select(a => new ArtDisplayViewModel
                 {
                     Id = a.Id,
                     Name = a.Name,
@@ -62,8 +65,8 @@ namespace MersadBerberArt.Controllers
         // GET: Art/Create
         public IActionResult Create()
         {
-            var artTypes = _context.ArtType.Select(a => a.Name).Distinct().ToList();
-            ViewBag.ArtTypes = new SelectList(artTypes);
+            var artTypes = _context.ArtType.ToList();
+            ViewBag.ArtTypes = new SelectList(artTypes, "Id", "Name");
 
             return View();
         }
@@ -73,15 +76,38 @@ namespace MersadBerberArt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,ArtTypeId,Description,DateCreated,Price,ImageUrl")] Art art)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateCreated,Price,ArtTypeId")] ArtViewModel artViewModel)
         {
-            if (ModelState.IsValid)
+            var artTypes = _context.ArtType.ToList();
+            ViewBag.ArtTypes = new SelectList(artTypes, "Id", "Name", artViewModel.ArtTypeId);
+
+            if (!ModelState.IsValid)
+                return View(artViewModel);
+
+            string uniqueFileName = "";
+            if (ArtImageFile != null && ArtImageFile.Length > 0)
             {
-                _context.Add(art);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                uniqueFileName = ArtImageFile.FileName;
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/arts", uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    ArtImageFile.CopyToAsync(stream);
+                }
             }
-            return View(art);
+            else
+                ModelState.AddModelError("ArtImageFile", "Please select a file.");
+
+            _context.Add(new Art
+            {
+                Name = artViewModel.Name,
+                Description = artViewModel.Description,
+                DateCreated = artViewModel.DateCreated,
+                Price = artViewModel.Price,
+                ArtTypeId = artViewModel.ArtTypeId,
+                ImageUrl = uniqueFileName
+            });
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Art/Edit/5
