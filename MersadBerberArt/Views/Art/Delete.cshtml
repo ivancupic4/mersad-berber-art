@@ -1,4 +1,4 @@
-﻿@model MersadBerberArt.Models.Art
+﻿@model MersadBerberArt.Models.ArtDisplayViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -18,10 +18,10 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ArtType)
+            @Html.DisplayNameFor(model => model.ArtTypeName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ArtType)
+            @Html.DisplayFor(model => model.ArtTypeName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
@@ -42,16 +42,16 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
+            Image
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
+            <img src="~/images/arts/@Html.DisplayFor(model => model.ImageUrl)" class="card-img" />
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </form>
 </div>

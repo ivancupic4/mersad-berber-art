@@ -10,5 +10,12 @@ namespace MersadBerberArt.Models
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
         public decimal Price { get; set; }
+        [SkipValidation]
+        public string ImageUrl { get; set; }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class SkipValidationAttribute : Attribute
+    {
     }
 }

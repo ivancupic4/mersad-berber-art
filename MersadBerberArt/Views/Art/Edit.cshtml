@@ -1,4 +1,4 @@
-﻿@model MersadBerberArt.Models.Art
+﻿@model MersadBerberArt.Models.ArtViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -19,18 +19,18 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ArtType" class="control-label"></label>
-                <select asp-for="ArtType" class="form-control"></select>
-                <span asp-validation-for="ArtType" class="text-danger"></span>
+                <label asp-for="ArtTypeId" class="control-label"></label>
+                @Html.DropDownList("ArtTypeId", ViewBag.ArtTypes, "", new { @class = "form-control input-sm" })
+                <span asp-validation-for="ArtTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateCreated" class="control-label"></label>
-                <input asp-for="DateCreated" class="form-control" />
+                <input asp-for="DateCreated" class="form-control" type="date" />
                 <span asp-validation-for="DateCreated" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,19 +39,17 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label for="ArtImageFile" class="control-label">Upload image</label>
+                <input class="form-control" type="file" id="ArtImageFile" name="ArtImageFile">
+                <span class="text-danger">@Html.ValidationMessage("ArtImageFile")</span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
