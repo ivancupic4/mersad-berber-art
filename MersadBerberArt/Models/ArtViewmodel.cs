@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MersadBerberArt.Models
 {
@@ -9,7 +10,8 @@ namespace MersadBerberArt.Models
         public int ArtTypeId { get; set; }
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
-        public decimal Price { get; set; }
+        [RegularExpression(@"^\d+(,\d{1,2})?(\.\d{1,2})?$", ErrorMessage = "Please enter a valid numeric value.")] 
+        public string Price { get; set; }
         [SkipValidation]
         public string ImageUrl { get; set; }
     }

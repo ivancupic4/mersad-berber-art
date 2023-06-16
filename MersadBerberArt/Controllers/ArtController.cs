@@ -71,6 +71,7 @@ namespace MersadBerberArt.Controllers
             else
                 ModelState.AddModelError("ArtImageFile", "Please select a file.");
 
+            artViewModel.Price = artViewModel.Price.Replace(".", ",");
             _context.Add(_modelMapper.MapArtViewModelToArt(artViewModel, uniqueFileName));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -110,6 +111,7 @@ namespace MersadBerberArt.Controllers
                     _artService.SaveFile(ArtImageFile);
                 }
 
+                artViewModel.Price = artViewModel.Price.Replace(".", ",");
                 _modelMapper.MapArtViewModelToArt(artViewModel, uniqueFileName, art);
 
                 try

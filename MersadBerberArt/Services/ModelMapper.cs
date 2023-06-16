@@ -34,7 +34,7 @@ namespace MersadBerberArt.Services
                 Name = artViewModel.Name,
                 Description = artViewModel.Description,
                 DateCreated = artViewModel.DateCreated,
-                Price = artViewModel.Price,
+                Price = ParseStringToDecimal(artViewModel.Price),
                 ArtTypeId = artViewModel.ArtTypeId,
                 ImageUrl = imageUrl
             };
@@ -47,7 +47,7 @@ namespace MersadBerberArt.Services
             art.ArtTypeId = artViewModel.ArtTypeId;
             art.DateCreated = artViewModel.DateCreated;
             art.ImageUrl = fileName;
-            art.Price = artViewModel.Price;
+            art.Price = ParseStringToDecimal(artViewModel.Price);
         }
 
         public ArtViewModel MapArtToArtViewModel(Art art)
@@ -58,10 +58,19 @@ namespace MersadBerberArt.Services
                 Name = art.Name,
                 Description = art.Description,
                 DateCreated = art.DateCreated,
-                Price = art.Price,
+                Price = art.Price.ToString(),
                 ArtTypeId = art.ArtTypeId,
                 ImageUrl = art.ImageUrl
             };
+        }
+
+        decimal ParseStringToDecimal(string priceString)
+        {
+            decimal price = 0;
+            if (!decimal.TryParse(priceString, out price))
+                throw new FormatException("Price is not in correct format");
+
+            return price;
         }
     }
 }
