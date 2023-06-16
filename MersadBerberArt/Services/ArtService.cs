@@ -11,7 +11,6 @@ namespace MersadBerberArt.Services
         public void SaveFile(IFormFile artImageFile);
         public void DeleteFile(string imageUrl);
         public List<ArtDisplayViewModel> SearchArt(string searchString, int? artTypeId);
-
 	}
 
     public class ArtService : IArtService

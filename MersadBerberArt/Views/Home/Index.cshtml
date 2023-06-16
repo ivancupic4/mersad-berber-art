@@ -13,13 +13,13 @@
         <h2>Paintings</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
         <img src="~/images/arts/test-art-1.jpg" style="width: 100%; object-fit: cover; " /><br /><br />
-        <p>@Html.ActionLink("Paintings »", "Index", "Shop", new { artType = ArtTypeEnum.Painting }, htmlAttributes: new { @class = "btn btn-primary" })</p>
+        <p>@Html.ActionLink("Paintings »", "Index", "Shop", new { artTypeId = (int)ArtTypeEnum.Painting }, htmlAttributes: new { @class = "btn btn-primary" })</p>
     </div>
     <div class="col-md-4">
         <h2>Prints</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
         <img src="~/images/arts/test-art-2.jpg" style="width: 100%; object-fit: cover; " /><br /><br />
-        <p>@Html.ActionLink("Prints »", "Index", "Shop", new { artType = ArtTypeEnum.Print }, htmlAttributes: new {@class = "btn btn-primary" })</p>
+        <p>@Html.ActionLink("Prints »", "Index", "Shop", new { artTypeId = (int)ArtTypeEnum.Print }, htmlAttributes: new {@class = "btn btn-primary" })</p>
     </div>
     <div class="col-md-4">
         <h2>Gold Plating</h2>

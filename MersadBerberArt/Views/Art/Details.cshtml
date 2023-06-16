@@ -23,7 +23,7 @@
                 <dd class="col-sm-8">@Html.DisplayFor(model => model.Price)</dd>
             </dl>
             @Html.ActionLink("Add to cart", "AddToCart", "Shop", new { id = Model.Id }, new { @class = "btn btn-info btn-md" })
-            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            @Html.ActionLink("Back to List", "Index", ViewData["ViewedFrom"].ToString(), new { id = Model.Id }, new { @class = "btn btn-secondary btn-md" })
             <br /><br />
         </div>
         <div class="col-md-8">

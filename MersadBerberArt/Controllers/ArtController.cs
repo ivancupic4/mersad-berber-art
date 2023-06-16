@@ -32,7 +32,7 @@ namespace MersadBerberArt.Controllers
                 : Problem("Entity set 'ApplicationDbContext.Art' is null.");
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string viewedFrom)
         {
             if (id == null || _context.Art == null)
                 return NotFound();
@@ -40,6 +40,8 @@ namespace MersadBerberArt.Controllers
             var art = _context.Art.Include(a => a.ArtType).FirstOrDefault(a => a.Id == id);
             if (art == null)
                 return NotFound();
+
+            ViewData["ViewedFrom"] = viewedFrom;
 
             return View(_modelMapper.MapArtToArtDisplayViewModel(art));
         }

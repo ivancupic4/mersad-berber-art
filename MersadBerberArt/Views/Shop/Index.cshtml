@@ -25,21 +25,26 @@
     }
 </nav>
 <br />
-<table class="table">
+<table class="table table-borderless">
     @foreach (var item in Model)
     {
-        <tr class="row" style="padding: 20px 0px 20px 0px;">
-            <td class="col-md-4">
+        <tr class="row" style="padding: 0px 0px 20px 0px;">
+            <td class="col-md-5">
                 <img src="~/images/arts/@item.ImageUrl"  class="card-img" />
+                <p></p>
             </td>
-            <td class="col-md-3" style="padding-left: 25px">
+            <td class="col-md-1" style="width: 30px;">
+
+            </td>
+            <td class="col-md-4">
                 <p class="lead fw-bold">@Html.DisplayFor(modelItem => item.Name)</p>
                 <p>@Html.DisplayFor(modelItem => item.ArtType) | @Html.DisplayFor(modelItem => item.DateCreated)</p>
                 <p class="text-success lead fw-bold"><strong>@Html.DisplayFor(modelItem => item.Price)</strong></p>
             </td>
             <td class="col-md-2">
                 @Html.ActionLink("Add to cart", "AddToCart", new { id = item.Id }, new { @class = "btn btn-info btn-md" })
-                <div style="margin-top: 5px;">@Html.ActionLink("Details", "Details", "Art", new { id = item.Id }, new { @class = "btn btn-secondary btn-md" })</div>
+                <div style="margin-top: 5px;">@Html.ActionLink("Details", "Details", "Art", new { id = item.Id, viewedFrom = "Shop" }, new { @class = "btn btn-secondary btn-md" })</div>
+                <br />
             </td>
         </tr>
     }
