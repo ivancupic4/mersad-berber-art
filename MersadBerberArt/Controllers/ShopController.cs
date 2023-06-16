@@ -1,43 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MersadBerberArt.Data;
-using MersadBerberArt.Models;
+using MersadBerberArt.Services;
 
 namespace MersadBerberArt.Controllers
 {
     public class ShopController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IArtService _artService;
+        private readonly IModelMapper _modelMapper;
 
-        public ShopController(ApplicationDbContext context)
+        public ShopController(ApplicationDbContext context, IArtService artService, IModelMapper modelMapper)
         {
             _context = context;
+            _artService = artService;
+            _modelMapper = modelMapper;
         }
 
-        // GET: Shop
-        public async Task<IActionResult> Index(string searchString, ArtTypeEnum? artType = null)
+        public async Task<IActionResult> Index(string searchString, int? artTypeId = null)
         {
-            var artTypes = _context.ArtType.Select(a => a.Name).Distinct().ToList();
-            ViewBag.ArtTypes = new SelectList(artTypes);
+            ViewBag.ArtTypes = _artService.GetArtTypesSelectList();
 
             var result = await _context.Art
-                .Where(a => (!artType.HasValue || a.ArtType.Id == (int)artType.Value)
+                .Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
                          && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
-                .Select(a => new ArtDisplayViewModel 
-                { 
-                    Id = a.Id,
-                    Name = a.Name,
-                    ArtTypeName = a.ArtType.Name,
-                    DateCreated = a.DateCreated.ToShortDateString(),
-                    Description = a.Description,
-                    ImageUrl = a.ImageUrl,
-                    Price = $"{a.Price}€"
-                })
+                .Select(a => _modelMapper.MapArtToArtDisplayViewModel(a))
                 .ToListAsync();
 
             return _context.Art != null 

@@ -11,7 +11,7 @@
     {
         <div class="col-sm-2 d-inline-block">
             <label class="form-label mt-4">Art Type: </label>
-            @Html.DropDownList("ArtType", (IEnumerable<SelectListItem>)ViewBag.ArtTypes,"", new { @class = "form-control input-sm" })
+            @Html.DropDownList("ArtTypeId", ViewBag.ArtTypes, "", new { @class = "form-control input-sm" })
         </div>
         <div class="col-sm-2 d-inline-block" style="margin-left: 10px">
             <label class="form-label mt-4">Name: </label>

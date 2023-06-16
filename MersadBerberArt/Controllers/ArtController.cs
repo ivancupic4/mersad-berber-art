@@ -1,48 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MersadBerberArt.Data;
 using MersadBerberArt.Models;
-using System.Security.AccessControl;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Reflection;
+using MersadBerberArt.Services;
 
 namespace MersadBerberArt.Controllers
 {
     public class ArtController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IArtService _artService;
+        private readonly IModelMapper _modelMapper;
 
-        public ArtController(ApplicationDbContext context)
+        public ArtController(ApplicationDbContext context, IArtService artService, IModelMapper modelMapper)
         {
             _context = context;
+            _artService = artService;
+            _modelMapper = modelMapper;
         }
 
         [BindProperty]
         public IFormFile ArtImageFile { get; set; }
 
-        public async Task<IActionResult> Index(string searchString, ArtTypeEnum? artType = null)
+        public async Task<IActionResult> Index(string searchString, int? artTypeId = null)
         {
-            var artTypes = _context.ArtType.Select(a => a.Name).Distinct().ToList();
-            ViewBag.ArtTypes = new SelectList(artTypes);
+            ViewBag.ArtTypes = _artService.GetArtTypesSelectList();
 
             var result = await _context.Art
-            .Where(a => (!artType.HasValue || a.ArtType.Id == (int)artType.Value)
-                         && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
-                .Select(a => new ArtDisplayViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    ArtTypeName = a.ArtType.Name,
-                    DateCreated = a.DateCreated.ToShortDateString(),
-                    Description = a.Description,
-                    ImageUrl = a.ImageUrl,
-                    Price = $"{a.Price}€"
-                })
+            .Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
+                     && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
+                .Select(a => _modelMapper.MapArtToArtDisplayViewModel(a))
                 .ToListAsync();
 
             return _context.Art != null
@@ -64,9 +52,7 @@ namespace MersadBerberArt.Controllers
 
         public IActionResult Create()
         {
-            var artTypes = _context.ArtType.ToList();
-            ViewBag.ArtTypes = new SelectList(artTypes, "Id", "Name");
-
+            ViewBag.ArtTypes = _artService.GetArtTypesSelectList();
             return View();
         }
 
@@ -74,8 +60,7 @@ namespace MersadBerberArt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,DateCreated,Price,ArtTypeId")] ArtViewModel artViewModel)
         {
-            var artTypes = _context.ArtType.ToList();
-            ViewBag.ArtTypes = new SelectList(artTypes, "Id", "Name", artViewModel.ArtTypeId);
+            ViewBag.ArtTypes = _artService.GetArtTypesSelectList(artViewModel.ArtTypeId);
 
             RemoveSkippedPropertiesFromArtViewModelValidation();
             if (!ModelState.IsValid)
@@ -85,24 +70,12 @@ namespace MersadBerberArt.Controllers
             if (ArtImageFile != null && ArtImageFile.Length > 0)
             {
                 uniqueFileName = ArtImageFile.FileName;
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/arts", uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    ArtImageFile.CopyToAsync(stream);
-                }
+                _artService.SaveFile(ArtImageFile);
             }
             else
                 ModelState.AddModelError("ArtImageFile", "Please select a file.");
 
-            _context.Add(new Art
-            {
-                Name = artViewModel.Name,
-                Description = artViewModel.Description,
-                DateCreated = artViewModel.DateCreated,
-                Price = artViewModel.Price,
-                ArtTypeId = artViewModel.ArtTypeId,
-                ImageUrl = uniqueFileName
-            });
+            _context.Add(_modelMapper.MapArtViewModelToArt(artViewModel, uniqueFileName));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -116,64 +89,32 @@ namespace MersadBerberArt.Controllers
             if (art == null)
                 return NotFound();
 
-            var artTypes = _context.ArtType.ToList();
-            ViewBag.ArtTypes = new SelectList(artTypes, "Id", "Name", art.ArtTypeId);
-
-            return View(new ArtViewModel
-            {
-                Id = art.Id,
-                Name = art.Name,
-                Description = art.Description,
-                DateCreated = art.DateCreated,
-                Price = art.Price,
-                ArtTypeId = art.ArtTypeId,
-                ImageUrl = art.ImageUrl
-            });
+            ViewBag.ArtTypes = _artService.GetArtTypesSelectList(art.ArtTypeId);
+            return View(_modelMapper.MapArtToArtViewModel(art));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ArtTypeId,Description,DateCreated,Price,ImageUrl")] ArtViewModel artViewModel)
         {
-            var artTypes = _context.ArtType.ToList();
-            ViewBag.ArtTypes = new SelectList(artTypes, "Id", "Name", artViewModel.ArtTypeId);
+            ViewBag.ArtTypes = _artService.GetArtTypesSelectList(artViewModel.ArtTypeId);
 
-            RemoveSkippedPropertiesFromArtViewModelValidation();
+            RemoveSkippedPropertiesFromArtViewModelValidation(new List<string> { nameof(ArtImageFile) });
             if (ModelState.IsValid)
             {
                 var art = _context.Art.Find(id);
                 if (art == null)
                     return NotFound();
 
-                string uniqueFileName = "";
-                if (ArtImageFile != null && ArtImageFile.Length > 0)
+                string uniqueFileName = art.ImageUrl;
+                if (ArtImageFile != null && ArtImageFile.Length > 0 && art.ImageUrl != ArtImageFile.FileName)
                 {
                     uniqueFileName = ArtImageFile.FileName;
-                    // If new file name is different from existing file name
-                    if (art.ImageUrl != uniqueFileName)
-                    {
-                        // First Delete the existing image
-                        string imageUrl = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/arts", art.ImageUrl);
-                        if (System.IO.File.Exists(imageUrl))
-                            System.IO.File.Delete(imageUrl);
-
-                        // Then add the new image
-                        string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/arts", uniqueFileName);
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            ArtImageFile.CopyToAsync(stream);
-                        }
-                    }
+                    _artService.DeleteFile(art.ImageUrl);
+                    _artService.SaveFile(ArtImageFile);
                 }
-                else
-                    ModelState.AddModelError("ArtImageFile", "Please select a file.");
 
-                art.Name = artViewModel.Name;
-                art.Description = artViewModel.Description;
-                art.ArtTypeId = artViewModel.ArtTypeId;
-                art.DateCreated = artViewModel.DateCreated;
-                art.ImageUrl = uniqueFileName;
-                art.Price = artViewModel.Price;
+                _modelMapper.MapArtViewModelToArt(artViewModel, uniqueFileName, art);
 
                 try
                 {
@@ -202,16 +143,7 @@ namespace MersadBerberArt.Controllers
             if (art == null)
                 return NotFound();
 
-            return View(new ArtDisplayViewModel
-            {
-                Id = art.Id,
-                Name = art.Name,
-                ArtTypeName = art.ArtType.Name,
-                DateCreated = art.DateCreated.ToShortDateString(),
-                Description = art.Description,
-                ImageUrl = art.ImageUrl,
-                Price = $"{art.Price}€"
-            });
+            return View(_modelMapper.MapArtToArtDisplayViewModel(art));
         }
 
         [HttpPost, ActionName("Delete")]
@@ -229,23 +161,21 @@ namespace MersadBerberArt.Controllers
             await _context.SaveChangesAsync();
 
             if (!string.IsNullOrEmpty(imageUrl))
-            {
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/arts", imageUrl);
-                if (System.IO.File.Exists(filePath))
-                    System.IO.File.Delete(filePath);
-            }
+                _artService.DeleteFile(imageUrl);
 
             return RedirectToAction(nameof(Index));
         }
 
-        private void RemoveSkippedPropertiesFromArtViewModelValidation()
+        private void RemoveSkippedPropertiesFromArtViewModelValidation(List<string> additionalPropertiesToRemove = null)
         {
             var excludedProperties = typeof(ArtViewModel).GetProperties()
-                .Where(prop => prop.GetCustomAttribute<SkipValidationAttribute>() != null);
+                .Where(prop => prop.GetCustomAttribute<SkipValidationAttribute>() != null)
+                .ToList();
 
-            foreach (var property in excludedProperties)
+            additionalPropertiesToRemove = additionalPropertiesToRemove ?? new List<string>();
+            foreach (var propName in excludedProperties.Select(p => p.Name).Union(additionalPropertiesToRemove))
             {
-                ModelState.Remove(property.Name);
+                ModelState.Remove(propName);
             }
         }
 
