@@ -38,7 +38,7 @@
                 <p class="text-success lead fw-bold"><strong>@Html.DisplayFor(modelItem => item.Price)</strong></p>
             </td>
             <td class="col-md-2">
-                @Html.ActionLink("Add to cart", "Cart", new { id = item.Id }, new { @class = "btn btn-info btn-md" })
+                @Html.ActionLink("Add to cart", "AddToCart", new { id = item.Id }, new { @class = "btn btn-info btn-md" })
                 <div style="margin-top: 5px;">@Html.ActionLink("Details", "Details", "Art", new { id = item.Id }, new { @class = "btn btn-secondary btn-md" })</div>
             </td>
         </tr>

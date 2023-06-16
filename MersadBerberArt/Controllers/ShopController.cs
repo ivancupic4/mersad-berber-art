@@ -25,14 +25,8 @@ namespace MersadBerberArt.Controllers
         {
             ViewBag.ArtTypes = _artService.GetArtTypesSelectList();
 
-            var result = await _context.Art
-                .Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
-                         && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
-                .Select(a => _modelMapper.MapArtToArtDisplayViewModel(a))
-                .ToListAsync();
-
             return _context.Art != null 
-                ? View(result)
+                ? View(_artService.SearchArt(searchString, artTypeId))
                 : Problem("Entity set 'ApplicationDbContext.Art' is null.");
         }
 

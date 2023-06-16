@@ -10,18 +10,32 @@ namespace MersadBerberArt.Services
         public SelectList GetArtTypesSelectList(int? artTypeId = null);
         public void SaveFile(IFormFile artImageFile);
         public void DeleteFile(string imageUrl);
-    }
+        public List<ArtDisplayViewModel> SearchArt(string searchString, int? artTypeId);
+
+	}
 
     public class ArtService : IArtService
     {
         private const string ImagesFolderPath = "wwwroot/images/arts";
 
         private readonly ApplicationDbContext _context;
+		private readonly IModelMapper _modelMapper;
 
-        public ArtService(ApplicationDbContext context)
+		public ArtService(ApplicationDbContext context, IModelMapper modelMapper)
         {
             _context = context;
-        }
+            _modelMapper = modelMapper;
+
+		}
+
+        public List<ArtDisplayViewModel> SearchArt(string searchString, int? artTypeId)
+        {
+			return _context.Art
+				.Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
+						    && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
+				.Select(a => _modelMapper.MapArtToArtDisplayViewModel(a))
+				.ToList();
+		}
 
         public SelectList GetArtTypesSelectList(int? artTypeId = null)
         {
