@@ -33,7 +33,7 @@
         <tr>
             <th class="col-md-2">Image</th>
             <th class="col-md-2">@Html.DisplayNameFor(model => model.Name)</th>
-            <th class="col-md-1">@Html.DisplayNameFor(model => model.ArtTypeName)</th>
+            <th class="col-md-1">@Html.DisplayNameFor(model => model.ArtType)</th>
             <th class="col-md-3">@Html.DisplayNameFor(model => model.Description)</th>
             <th class="col-md-1">@Html.DisplayNameFor(model => model.DateCreated)</th>
             <th class="col-md-1">@Html.DisplayNameFor(model => model.Price)</th>
@@ -46,7 +46,7 @@
         <tr>
             <td class="col-md-2"><img src="~/images/arts/@item.ImageUrl" class="card-img" /></td>
             <td class="col-md-2">@Html.DisplayFor(modelItem => item.Name)</td>
-            <td class="col-md-1">@Html.DisplayFor(modelItem => item.ArtTypeName)</td>
+            <td class="col-md-1">@Html.DisplayFor(modelItem => item.ArtType)</td>
             <td class="col-md-3">@Html.DisplayFor(modelItem => item.Description)</td>
             <td class="col-md-1">@Html.DisplayFor(modelItem => item.DateCreated)</td>
             <td class="col-md-1">@Html.DisplayFor(modelItem => item.Price)</td>

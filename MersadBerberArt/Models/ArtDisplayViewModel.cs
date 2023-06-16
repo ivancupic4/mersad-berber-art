@@ -7,7 +7,7 @@ namespace MersadBerberArt.Models
         public int Id { get; set; }
         public string Name { get; set; }
         [DisplayName("Art Type")]
-        public string ArtTypeName { get; set; }
+        public string ArtType { get; set; }
         public string Description { get; set; }
         [DisplayName("Date Created")]
         public string DateCreated { get; set; }

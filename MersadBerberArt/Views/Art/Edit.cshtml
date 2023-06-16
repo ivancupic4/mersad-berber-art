@@ -1,12 +1,11 @@
 ﻿@model MersadBerberArt.Models.ArtViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Art";
 }
 
-<h1>Edit</h1>
+<h1>Edit @Html.DisplayFor(model => model.Name)</h1>
 
-<h4>Art</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -48,7 +47,11 @@
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
+            <br />
         </form>
+    </div>
+    <div class="col-md-8 form-group">
+        <img src="~/images/arts/@Html.DisplayFor(model => model.ImageUrl)" class="card-img" />
     </div>
 </div>
 

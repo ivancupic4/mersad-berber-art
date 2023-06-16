@@ -28,8 +28,8 @@ namespace MersadBerberArt.Controllers
             ViewBag.ArtTypes = _artService.GetArtTypesSelectList();
 
             var result = await _context.Art
-            .Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
-                     && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
+                .Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
+                         && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
                 .Select(a => _modelMapper.MapArtToArtDisplayViewModel(a))
                 .ToListAsync();
 
@@ -43,11 +43,11 @@ namespace MersadBerberArt.Controllers
             if (id == null || _context.Art == null)
                 return NotFound();
 
-            var art = await _context.Art.FindAsync(id);
+            var art = _context.Art.Include(a => a.ArtType).FirstOrDefault(a => a.Id == id);
             if (art == null)
                 return NotFound();
 
-            return View(art);
+            return View(_modelMapper.MapArtToArtDisplayViewModel(art));
         }
 
         public IActionResult Create()

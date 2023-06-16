@@ -34,71 +34,13 @@
             </td>
             <td class="col-md-3" style="padding-left: 25px">
                 <p class="lead fw-bold">@Html.DisplayFor(modelItem => item.Name)</p>
-                <p>@Html.DisplayFor(modelItem => item.ArtTypeName) | @Html.DisplayFor(modelItem => item.DateCreated)</p>
+                <p>@Html.DisplayFor(modelItem => item.ArtType) | @Html.DisplayFor(modelItem => item.DateCreated)</p>
                 <p class="text-success lead fw-bold"><strong>@Html.DisplayFor(modelItem => item.Price)</strong></p>
-            </td>
-            <td class="col-md-3">
-                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td class="col-md-2">
                 @Html.ActionLink("Add to cart", "Cart", new { id = item.Id }, new { @class = "btn btn-info btn-md" })
-                <div style="margin-top: 5px;">@Html.ActionLink("View Details", "Details", "Art", new { id = item.Id }, new { @class = "btn btn-secondary btn-md" })</div>
+                <div style="margin-top: 5px;">@Html.ActionLink("Details", "Details", "Art", new { id = item.Id }, new { @class = "btn btn-secondary btn-md" })</div>
             </td>
         </tr>
     }
 </table>
-
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArtTypeId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArtTypeId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@

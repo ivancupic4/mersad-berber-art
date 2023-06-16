@@ -18,7 +18,7 @@ namespace MersadBerberArt.Services
             {
                 Id = art.Id,
                 Name = art.Name,
-                ArtTypeName = art.ArtType.Name,
+                ArtType = art.ArtType.Name,
                 DateCreated = art.DateCreated.ToShortDateString(),
                 Description = art.Description,
                 ImageUrl = art.ImageUrl,
