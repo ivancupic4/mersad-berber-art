@@ -23,12 +23,18 @@ namespace MersadBerberArt.Controllers
         [BindProperty]
         public IFormFile ArtImageFile { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        public int PageSize { get; } = 10;
+
         public async Task<IActionResult> Index(string searchString, int? artTypeId = null)
         {
             ViewBag.ArtTypes = _artService.GetArtTypesSelectList();
 
+            var result = _artService.SearchArt(searchString, artTypeId, new PaginationData { PageIndex = PageIndex, PageSize = PageSize });
+
             return _context.Art != null
-                ? View(_artService.SearchArt(searchString, artTypeId))
+                ? View(result.Items)
                 : Problem("Entity set 'ApplicationDbContext.Art' is null.");
         }
 

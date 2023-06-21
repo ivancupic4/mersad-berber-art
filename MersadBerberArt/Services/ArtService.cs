@@ -1,7 +1,10 @@
 ﻿using MersadBerberArt.Data;
 using MersadBerberArt.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using System.Composition;
+using System.Drawing.Printing;
 
 namespace MersadBerberArt.Services
 {
@@ -10,8 +13,8 @@ namespace MersadBerberArt.Services
         public SelectList GetArtTypesSelectList(int? artTypeId = null);
         public void SaveFile(IFormFile artImageFile);
         public void DeleteFile(string imageUrl);
-        public List<ArtDisplayViewModel> SearchArt(string searchString, int? artTypeId);
-	}
+        public ArtSearchResult SearchArt(string searchString, int? artTypeId, PaginationData paginationData = null);
+    }
 
     public class ArtService : IArtService
     {
@@ -27,14 +30,39 @@ namespace MersadBerberArt.Services
 
 		}
 
-        public List<ArtDisplayViewModel> SearchArt(string searchString, int? artTypeId)
+        public ArtSearchResult SearchArt(string searchString, int? artTypeId, PaginationData paginationData = null)
         {
-			return _context.Art
-				.Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
-						    && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)))
-				.Select(a => _modelMapper.MapArtToArtDisplayViewModel(a))
-				.ToList();
+            paginationData = paginationData ?? new PaginationData { PageIndex = 1, PageSize = 10};
+
+            var query = GetArtBasicSearchQuery(searchString, artTypeId);
+            int totalSearchedItems = query.Count();
+            int pageCount = (int)Math.Ceiling(totalSearchedItems / (double)paginationData.PageSize);
+
+            if (paginationData.PageIndex > pageCount)
+                paginationData.PageIndex = pageCount;
+
+            query = query
+                .Skip((paginationData.PageIndex - 1) * paginationData.PageSize)
+                .Take(paginationData.PageSize);
+
+            return new ArtSearchResult
+            {
+                Items = query.Select(a => _modelMapper.MapArtToArtDisplayViewModel(a)).ToList(),
+                PaginationData = new PaginationData 
+                { 
+                    PageCount = pageCount, 
+                    PageIndex = paginationData.PageIndex, 
+                    PageSize = paginationData.PageSize 
+                },
+            };
 		}
+
+        private IQueryable<Art> GetArtBasicSearchQuery(string searchString, int? artTypeId)
+        {
+            return _context.Art.Include(a => a.ArtType)
+                .Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
+                            && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)));
+        }
 
         public SelectList GetArtTypesSelectList(int? artTypeId = null)
         {
