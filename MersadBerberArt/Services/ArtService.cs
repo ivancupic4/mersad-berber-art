@@ -38,7 +38,7 @@ namespace MersadBerberArt.Services
             int totalSearchedItems = query.Count();
             int pageCount = (int)Math.Ceiling(totalSearchedItems / (double)paginationData.PageSize);
 
-            if (paginationData.PageIndex > pageCount)
+            if (paginationData.PageIndex > pageCount && pageCount > 0)
                 paginationData.PageIndex = pageCount;
 
             query = query
@@ -48,6 +48,7 @@ namespace MersadBerberArt.Services
             return new ArtSearchResult
             {
                 Items = query.Select(a => _modelMapper.MapArtToArtDisplayViewModel(a)).ToList(),
+                ArtTypes = GetArtTypesSelectList(artTypeId),
                 PaginationData = new PaginationData 
                 { 
                     PageCount = pageCount, 

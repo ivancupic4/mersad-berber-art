@@ -1,4 +1,4 @@
-﻿@model ArtSearchResult //IEnumerable<ArtDisplayViewModel>
+﻿@model ArtSearchResult
 
 @{
     ViewData["Title"] = "Shop";
@@ -10,7 +10,7 @@
 {
     <div class="col-sm-2 d-inline-block">
         <label class="form-label mt-4">Art Type: </label>
-        @Html.DropDownList("ArtTypeId", ViewBag.ArtTypes, "", new { @class = "form-control input-sm" })
+        @Html.DropDownList("ArtTypeId", Model.ArtTypes, "", new { @class = "form-control input-sm" })
     </div>
     <div class="col-sm-2 d-inline-block" style="margin-left: 10px">
         <label class="form-label mt-4">Name: </label>
@@ -22,25 +22,32 @@
         @Html.ActionLink("Clear", "Index", "Shop", null, new { @class = "btn btn-secondary btn-md" })
     </div>
 
-    <br />
+    <p></p>
 
     <input type="hidden" id="PageIndex" name="PageIndex" value="1" />
     <div>
         <ul class="pagination">
             @{
-                    <li class="page-item @(Model.PaginationData.PageIndex == 1 ? "disabled" : "")">
+                <li class="page-item @(Model.PaginationData.PageIndex == 1 || Model.PaginationData.PageCount == 0 ? "disabled" : "")">
                     <button class="page-link" type="submit" onclick="setPageIndex(1)">First</button>
                 </li>
-                    <li class="page-item @(Model.PaginationData.PageIndex == 1 ? "disabled" : "")">
-                        <button class="page-link" type="submit" onclick="setPageIndex(@(Model.PaginationData.PageIndex - 1))">Previous</button>
+                <li class="page-item @(Model.PaginationData.PageIndex == 1 || Model.PaginationData.PageCount == 0 ? "disabled" : "")">
+                    <button class="page-link" type="submit" onclick="setPageIndex(@(Model.PaginationData.PageIndex - 1))">Previous</button>
                 </li>
+
+                if (Model.PaginationData.PageCount == 0)
+                {
+                    <li class="page-item active">
+                        <button class="page-link" type="button">1</button>
+                    </li>
+                }
 
                 for (int i = 1; i <= Model.PaginationData.PageCount; i++)
                 {
                     if (i == Model.PaginationData.PageIndex)
                     {
                         <li class="page-item active">
-                            <button class="page-link active" href="#">@i</button>
+                            <button class="page-link" type="button">@i</button>
                         </li>
                     }
                     else
@@ -51,11 +58,11 @@
                     }
                 }
 
-                    <li class="page-item @(Model.PaginationData.PageIndex == Model.PaginationData.PageCount ? "disabled" : "")">
-                        <button class="page-link" type="submit" onclick="setPageIndex(@(Model.PaginationData.PageIndex + 1))">Next</button>
+                <li class="page-item @(Model.PaginationData.PageIndex == Model.PaginationData.PageCount || Model.PaginationData.PageCount == 0 ? "disabled" : "")">
+                    <button class="page-link" type="submit" onclick="setPageIndex(@(Model.PaginationData.PageIndex + 1))">Next</button>
                 </li>
-                    <li class="page-item @(Model.PaginationData.PageIndex == Model.PaginationData.PageCount ? "disabled" : "")">
-                        <button class="page-link" type="submit" onclick="setPageIndex(@Model.PaginationData.PageCount)">Last</button>
+                <li class="page-item @(Model.PaginationData.PageIndex == Model.PaginationData.PageCount || Model.PaginationData.PageCount == 0 ? "disabled" : "")">
+                    <button class="page-link" type="submit" onclick="setPageIndex(@Model.PaginationData.PageCount)">Last</button>
                 </li>
             }
         </ul>
@@ -63,6 +70,11 @@
 
     <br />
 
+    @if (Model.Items.Count == 0)
+    {
+        <h2>No results</h2>
+        <br />
+    }
     <table class="table table-borderless">
         @foreach (var item in Model.Items)
         {
@@ -91,19 +103,26 @@
     <div>
         <ul class="pagination">
             @{
-                    <li class="page-item @(Model.PaginationData.PageIndex == 1 ? "disabled" : "")">
+                <li class="page-item @(Model.PaginationData.PageIndex == 1 || Model.PaginationData.PageCount == 0 ? "disabled" : "")">
                     <button class="page-link" type="submit" onclick="setPageIndex(1)">First</button>
                 </li>
-                    <li class="page-item @(Model.PaginationData.PageIndex == 1 ? "disabled" : "")">
-                        <button class="page-link" type="submit" onclick="setPageIndex(@(Model.PaginationData.PageIndex - 1))">Previous</button>
+                <li class="page-item @(Model.PaginationData.PageIndex == 1 || Model.PaginationData.PageCount == 0 ? "disabled" : "")">
+                    <button class="page-link" type="submit" onclick="setPageIndex(@(Model.PaginationData.PageIndex - 1))">Previous</button>
                 </li>
+
+                if (Model.PaginationData.PageCount == 0)
+                {
+                    <li class="page-item active">
+                        <button class="page-link" type="button">1</button>
+                    </li>
+                }
 
                 for (int i = 1; i <= Model.PaginationData.PageCount; i++)
                 {
                     if (i == Model.PaginationData.PageIndex)
                     {
                         <li class="page-item active">
-                            <button class="page-link active" href="#">@i</button>
+                            <button class="page-link" type="button">@i</button>
                         </li>
                     }
                     else
@@ -114,11 +133,11 @@
                     }
                 }
 
-                    <li class="page-item @(Model.PaginationData.PageIndex == Model.PaginationData.PageCount ? "disabled" : "")">
+                <li class="page-item @(Model.PaginationData.PageIndex == Model.PaginationData.PageCount || Model.PaginationData.PageCount == 0 ? "disabled" : "")">
                     <button class="page-link" type="submit" onclick="setPageIndex(@(Model.PaginationData.PageIndex + 1))">Next</button>
                 </li>
-                    <li class="page-item @(Model.PaginationData.PageIndex == Model.PaginationData.PageCount ? "disabled" : "")">
-                        <button class="page-link" type="submit" onclick="setPageIndex(@Model.PaginationData.PageCount)">Last</button>
+                <li class="page-item @(Model.PaginationData.PageIndex == Model.PaginationData.PageCount || Model.PaginationData.PageCount == 0 ? "disabled" : "")">
+                    <button class="page-link" type="submit" onclick="setPageIndex(@Model.PaginationData.PageCount)">Last</button>
                 </li>
             }
         </ul>
