@@ -63,8 +63,8 @@ namespace MersadBerberArt.Services
             return _context.Art.Include(a => a.ArtType)
                 .Where(a => (!filter.ArtTypeId.HasValue || a.ArtType.Id == filter.ArtTypeId.Value)
                             && (string.IsNullOrEmpty(filter.SearchString) || a.Name.Contains(filter.SearchString))
-                            && (!filter.PriceFrom.HasValue || filter.PriceFrom.Value < a.Price)
-                            && (!filter.PriceTo.HasValue || filter.PriceTo.Value > a.Price));
+                            && (!filter.PriceFrom.HasValue || filter.PriceFrom.Value <= a.Price)
+                            && (!filter.PriceTo.HasValue || filter.PriceTo.Value >= a.Price));
         }
 
         public SelectList GetArtTypesSelectList(int? artTypeId = null)

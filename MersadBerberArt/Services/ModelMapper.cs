@@ -22,7 +22,7 @@ namespace MersadBerberArt.Services
                 DateCreated = art.DateCreated.ToShortDateString(),
                 Description = art.Description,
                 ImageUrl = art.ImageUrl,
-                Price = $"{art.Price}€"
+                Price = $"€{art.Price}"
             };
         }
 
