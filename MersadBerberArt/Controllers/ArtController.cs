@@ -27,10 +27,12 @@ namespace MersadBerberArt.Controllers
         public int PageIndex { get; set; } = 1;
         public int PageSize { get; } = 10;
 
-        public async Task<IActionResult> Index(string searchString, int? artTypeId = null)
+        public async Task<IActionResult> Index(string searchString, int? artTypeId = null, int? priceFrom = null, int? priceTo = null)
         {
             return _context.Art != null
-                ? View(_artService.SearchArt(searchString, artTypeId, new PaginationData { PageIndex = PageIndex, PageSize = PageSize }))
+                ? View(_artService.SearchArt(
+                    new ArtSearchParameters(searchString, artTypeId, priceFrom, priceTo),
+                    new PaginationData(PageIndex, PageSize)))
                 : Problem("Entity set 'ApplicationDbContext.Art' is null.");
         }
 

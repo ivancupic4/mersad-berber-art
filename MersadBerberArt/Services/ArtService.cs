@@ -13,7 +13,7 @@ namespace MersadBerberArt.Services
         public SelectList GetArtTypesSelectList(int? artTypeId = null);
         public void SaveFile(IFormFile artImageFile);
         public void DeleteFile(string imageUrl);
-        public ArtSearchResult SearchArt(string searchString, int? artTypeId, PaginationData paginationData = null);
+        public ArtSearchResult SearchArt(ArtSearchParameters artSearchParameters, PaginationData paginationData = null);
     }
 
     public class ArtService : IArtService
@@ -30,11 +30,11 @@ namespace MersadBerberArt.Services
 
 		}
 
-        public ArtSearchResult SearchArt(string searchString, int? artTypeId, PaginationData paginationData = null)
+        public ArtSearchResult SearchArt(ArtSearchParameters filter, PaginationData paginationData = null)
         {
-            paginationData = paginationData ?? new PaginationData { PageIndex = 1, PageSize = 10};
+            paginationData = paginationData ?? new PaginationData();
 
-            var query = GetArtBasicSearchQuery(searchString, artTypeId);
+            var query = GetArtBasicSearchQuery(filter);
             int totalSearchedItems = query.Count();
             int pageCount = (int)Math.Ceiling(totalSearchedItems / (double)paginationData.PageSize);
 
@@ -48,7 +48,7 @@ namespace MersadBerberArt.Services
             return new ArtSearchResult
             {
                 Items = query.Select(a => _modelMapper.MapArtToArtDisplayViewModel(a)).ToList(),
-                ArtTypes = GetArtTypesSelectList(artTypeId),
+                ArtTypes = GetArtTypesSelectList(filter.ArtTypeId),
                 PaginationData = new PaginationData 
                 { 
                     PageCount = pageCount, 
@@ -58,11 +58,13 @@ namespace MersadBerberArt.Services
             };
 		}
 
-        private IQueryable<Art> GetArtBasicSearchQuery(string searchString, int? artTypeId)
+        private IQueryable<Art> GetArtBasicSearchQuery(ArtSearchParameters filter)
         {
             return _context.Art.Include(a => a.ArtType)
-                .Where(a => (!artTypeId.HasValue || a.ArtType.Id == artTypeId.Value)
-                            && (string.IsNullOrEmpty(searchString) || a.Name.Contains(searchString)));
+                .Where(a => (!filter.ArtTypeId.HasValue || a.ArtType.Id == filter.ArtTypeId.Value)
+                            && (string.IsNullOrEmpty(filter.SearchString) || a.Name.Contains(filter.SearchString))
+                            && (!filter.PriceFrom.HasValue || filter.PriceFrom.Value < a.Price)
+                            && (!filter.PriceTo.HasValue || filter.PriceTo.Value > a.Price));
         }
 
         public SelectList GetArtTypesSelectList(int? artTypeId = null)

@@ -16,7 +16,17 @@
         <label class="form-label mt-4">Name: </label>
         @Html.TextBox("SearchString", null, new { @class = "form-control input-sm" })
     </div>
+    <div class="col-sm-1 d-inline-block" style="margin-left: 10px">
+        <label class="form-label mt-4">Price from: </label>
+        @Html.TextBox("PriceFrom", null, new { @class = "form-control input-sm", type = "number", step = "1", min = "0" })
+    </div>
+    <div class="col-sm-1 d-inline-block" style="margin-left: 10px">
+        <label class="form-label mt-4">Price to: </label>
+        @Html.TextBox("PriceTo", null, new { @class = "form-control input-sm", type = "number", step = "1", min = "0" })
+    </div>
+
     <p></p>
+
     <div class="col-md-12">
         <button type="submit" class="btn btn-primary">Search</button>
         @Html.ActionLink("Clear", "Index", "Art", null, new { @class = "btn btn-secondary btn-md" })
