@@ -48,6 +48,7 @@ namespace MersadBerberArt.Services
             return new ArtSearchResult
             {
                 Items = query.Select(a => _modelMapper.MapArtToArtDisplayViewModel(a)).ToList(),
+                TotalItems = totalSearchedItems,
                 ArtTypes = GetArtTypesSelectList(filter.ArtTypeId),
                 PaginationData = new PaginationData 
                 { 

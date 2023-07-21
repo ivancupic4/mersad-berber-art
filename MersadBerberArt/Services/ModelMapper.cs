@@ -28,7 +28,6 @@ namespace MersadBerberArt.Services
 
         public Art MapArtViewModelToArt(ArtViewModel artViewModel, string fileName)
         {
-            string imageUrl = fileName == string.Empty ? artViewModel.ImageUrl : fileName;
             return new Art
             {
                 Name = artViewModel.Name,
@@ -36,7 +35,7 @@ namespace MersadBerberArt.Services
                 DateCreated = artViewModel.DateCreated,
                 Price = ParseStringToDecimal(artViewModel.Price),
                 ArtTypeId = artViewModel.ArtTypeId,
-                ImageUrl = imageUrl
+                ImageUrl = fileName == string.Empty ? artViewModel.ImageUrl : fileName
             };
         }
 

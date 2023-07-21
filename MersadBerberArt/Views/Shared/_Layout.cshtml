@@ -23,6 +23,7 @@
                         <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-controller="Art" asp-action="Index">Manage Art</a></li>
                         <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                         <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="CookiePolicy">Cookie Policy</a></li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -37,12 +38,59 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Mersad Berber Art - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - Mersad Berber Art@* - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
         </div>
     </footer>
+
+    <div class="alert alert-dismissible alert-light fixed-bottom" style="margin-bottom: 0px; display: @( (ViewBag.ShowCookiePreferenceNotice ?? false) ? "true" : "none" ) ">
+        <p>
+            This website uses cookies that are necessary for a website to function properly, but do not collect any personal information. No data is being sold to third party or used for any other purpose other than stated. 
+            For more information please visit our <a asp-controller="Home" asp-action="CookiePolicy">Cookie Policy</a>. <br />
+        </p>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-sm btn-info align-items-md-end" data-bs-dismiss="alert" onclick="acceptCookies()" style="margin-right: 5px !important;">Accept Cookies</button>
+            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="alert" onclick="rejectCookies()">Reject Cookies</button>
+        </div>
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        function acceptCookies() {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: null
+            };
+
+            fetch("/Home/AcceptCookies", requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function rejectCookies() {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: null
+            };
+
+            fetch("/Home/RejectCookies", requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 </body>
 </html>

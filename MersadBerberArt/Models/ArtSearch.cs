@@ -20,6 +20,7 @@ namespace MersadBerberArt.Models
 
     public class ArtSearchResult
     {
+        public int TotalItems { get; set; }
         public List<ArtDisplayViewModel> Items { get; set; }
         public PaginationData PaginationData { get; set; }
         public SelectList ArtTypes { get; set; }

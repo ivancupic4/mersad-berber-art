@@ -68,3 +68,7 @@ body {
         font-size: 68px;
     }
 }
+
+.alert-dismissible {
+    padding-right: 1rem;
+}

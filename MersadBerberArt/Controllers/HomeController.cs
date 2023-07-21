@@ -1,6 +1,7 @@
 ﻿using MersadBerberArt.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Web;
 
 namespace MersadBerberArt.Controllers
 {
@@ -15,6 +16,22 @@ namespace MersadBerberArt.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.ShowCookiePreferenceNotice = true;
+            if (Request.Cookies["CookiePreference"] != null)
+            {
+                string cookieValue = Request.Cookies["CookiePreference"];
+                if (cookieValue == "Accepted")
+                {
+
+                }
+                else if (cookieValue == "Rejected")
+                {
+
+                }
+
+                ViewBag.ShowCookiePreferenceNotice = false;
+            }
+
             return View();
         }
 
@@ -26,6 +43,27 @@ namespace MersadBerberArt.Controllers
         public IActionResult Contact()
         {
             return View();
+        }
+
+        public IActionResult CookiePolicy()
+        {
+            return View();
+        }
+
+        public IActionResult AcceptCookies()
+        {
+            var options = new CookieOptions { Expires = DateTime.Now.AddDays(5) };
+            Response.Cookies.Append("CookiePreference", "Accepted", options);
+
+            return Json("Cookies accepted successfully.");
+        }
+
+        public IActionResult RejectCookies()
+        {
+            var options = new CookieOptions { Expires = DateTime.Now.AddDays(5) };
+            Response.Cookies.Append("CookiePreference", "Rejected", options);
+
+            return Json("Cookies rejected successfully.");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
